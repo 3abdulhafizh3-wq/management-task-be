@@ -1,9 +1,10 @@
 import { Router } from "express";
 import { getTasks, getTaskById, createTask, updateTaskStatus, deleteTask, } from "../controllers/tasks.controller.js";
+import { authenticateToken } from "../middlewares/auth.middleware.js";
 const router = Router();
-router.get("/", getTasks);
-router.get("/:id", getTaskById);
-router.post("/", createTask);
-router.patch("/:id", updateTaskStatus);
-router.delete("/:id", deleteTask);
+router.get("/", authenticateToken, getTasks);
+router.get("/:id", authenticateToken, getTaskById);
+router.post("/", authenticateToken, createTask);
+router.patch("/:id", authenticateToken, updateTaskStatus);
+router.delete("/:id", authenticateToken, deleteTask);
 export default router;

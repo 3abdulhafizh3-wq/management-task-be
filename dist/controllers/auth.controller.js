@@ -26,10 +26,13 @@ export const login = async (req, res) => {
             });
             return;
         }
-        // 5. Jika sukses, hapus password dari data respon demi keamanan
+        // 5. Generate JWT token
+        const token = authService.generateToken(user);
+        // 6. Hapus password dari data respon demi keamanan
         delete user.password;
         res.status(200).json({
             message: "Berhasil masuk!",
+            token: token,
             user: user
         });
     }
@@ -70,9 +73,13 @@ export const register = async (req, res) => {
             password,
             role: userRole
         });
-        // 4. Berikan respon berhasil
+        // 4. Generate JWT token
+        const token = authService.generateToken(newUser);
+        delete newUser.password;
+        // 5. Berikan respon berhasil
         res.status(201).json({
             message: "Pendaftaran berhasil!",
+            token: token,
             user: newUser
         });
     }

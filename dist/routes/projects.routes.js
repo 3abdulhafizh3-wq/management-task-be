@@ -1,9 +1,10 @@
 import { Router } from "express";
 import { getProjects, getProjectById, createProject, updateProject, deleteProject, } from "../controllers/projects.controller.js";
+import { authenticateToken } from "../middlewares/auth.middleware.js";
 const router = Router();
-router.get("/", getProjects);
-router.get("/:id", getProjectById);
-router.post("/", createProject);
-router.patch("/:id", updateProject);
-router.delete("/:id", deleteProject);
+router.get("/", authenticateToken, getProjects);
+router.get("/:id", authenticateToken, getProjectById);
+router.post("/", authenticateToken, createProject);
+router.patch("/:id", authenticateToken, updateProject);
+router.delete("/:id", authenticateToken, deleteProject);
 export default router;
