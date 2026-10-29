@@ -80,15 +80,17 @@ app.use(
   '/reference',
   apiReference({
     spec: {
-      content: openapiSpec, // Menggunakan objek JSON yang di-import
+      content: openapiSpec,
     },
-    theme: 'solarized', // Kamu bisa ubah tema: 'purple', 'moon', 'solarized', dll.
+    theme: 'solarized',
   })
 );
 
-app.listen(port, () => {
-  console.log(`Server berjalan di http://localhost:${port}`);
-  console.log(`Dokumentasi Scalar dapat diakses di http://localhost:${port}/reference`);
-});
+if (!process.env.VERCEL) {
+  app.listen(port, () => {
+    console.log(`Server berjalan di http://localhost:${port}`);
+    console.log(`Dokumentasi Scalar dapat diakses di http://localhost:${port}/reference`);
+  });
+}
 
 export default app;

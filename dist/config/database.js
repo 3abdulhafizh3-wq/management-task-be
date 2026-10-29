@@ -9,7 +9,12 @@ const useSsl = process.env.DB_SSL !== undefined
     ? process.env.DB_SSL === 'true'
     : !isLocalhost && Boolean(process.env.DATABASE_URL || process.env.DB_HOST);
 const poolConfig = process.env.DATABASE_URL
-    ? { connectionString: process.env.DATABASE_URL }
+    ? {
+        connectionString: process.env.DATABASE_URL,
+        max: 10,
+        idleTimeoutMillis: 30000,
+        connectionTimeoutMillis: 10000,
+    }
     : {
         host: process.env.DB_HOST,
         port: Number(process.env.DB_PORT) || 5432,
