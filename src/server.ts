@@ -51,6 +51,14 @@ app.use("/comments", commentsRoutes);
 app.use("/project_members", projectMembersRouter);
 app.use("/auth", authRoutes);
 
+app.use((err: any, req: Request, res: Response, next: any) => {
+  if (err instanceof SyntaxError && (err as any).status === 400 && 'body' in err) {
+    return res.status(400).json({ message: "Format JSON tidak valid" });
+  }
+  console.error("Unhandled error:", err);
+  res.status(500).json({ message: "Terjadi kesalahan pada server" });
+});
+
 app.get("/", (req: Request, res: Response) => {
   res.json({
     message: "Halo, Ini adalah API Management Task",
@@ -78,9 +86,9 @@ app.use(
   })
 );
 
-app.listen(3000, () => {
-  console.log('Server berjalan di http://localhost:3000');
-  console.log('Dokumentasi Scalar dapat diakses di http://localhost:3000/reference');
+app.listen(port, () => {
+  console.log(`Server berjalan di http://localhost:${port}`);
+  console.log(`Dokumentasi Scalar dapat diakses di http://localhost:${port}/reference`);
 });
 
 export default app;

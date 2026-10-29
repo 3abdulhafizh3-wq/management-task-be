@@ -108,3 +108,29 @@ export const register = async (req: Request, res: Response): Promise<void> => {
     res.status(500).json({ message: "Terjadi kesalahan pada server." });
   }
 };
+
+export const getMe = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const userId = (req as any).user?.id || (req as any).user?.sub;
+    if (!userId) {
+      res.status(401).json({ message: "Tidak terautentikasi" });
+      return;
+    }
+
+    const user = await authService.findUserById(userId);
+    if (!user) {
+      res.status(404).json({ message: "User tidak ditemukan" });
+      return;
+    }
+
+    delete user.password;
+    res.status(200).json({
+      message: "Berhasil mendapatkan data user",
+      data: user,
+      ...user
+    });
+  } catch (err) {
+    console.error("Error pada getMe:", err);
+    res.status(500).json({ message: "Terjadi kesalahan pada server." });
+  }
+};
