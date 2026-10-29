@@ -70,9 +70,34 @@ app.get("/test", async (req: Request, res: Response) => {
   try {
     const result = await pool.query("SELECT NOW()");
     res.json({ time: result.rows[0].now });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Database connection failed" });
+  } catch (err: any) {
+    console.error("Test DB Error:", err);
+    res.status(500).json({ error: "Database connection failed: " + (err?.message || "unknown") });
+  }
+});
+
+app.get("/debug-db", async (req: Request, res: Response) => {
+  const hasDbUrl = Boolean(process.env.DATABASE_URL);
+  const dbUrlPreview = process.env.DATABASE_URL
+    ? process.env.DATABASE_URL.replace(/:[^:@]+@/, ':***@')
+    : 'NOT_SET';
+
+  try {
+    const result = await pool.query("SELECT NOW()");
+    res.json({
+      status: "connected",
+      hasDbUrl,
+      dbUrlPreview,
+      time: result.rows[0].now
+    });
+  } catch (err: any) {
+    res.status(500).json({
+      status: "error",
+      hasDbUrl,
+      dbUrlPreview,
+      errorMessage: err.message,
+      errorCode: err.code
+    });
   }
 });
 

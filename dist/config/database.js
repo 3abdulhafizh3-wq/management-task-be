@@ -11,6 +11,7 @@ const useSsl = process.env.DB_SSL !== undefined
 const poolConfig = process.env.DATABASE_URL
     ? {
         connectionString: process.env.DATABASE_URL,
+        ssl: useSsl ? { rejectUnauthorized: false } : false,
         max: 10,
         idleTimeoutMillis: 30000,
         connectionTimeoutMillis: 10000,
@@ -21,9 +22,7 @@ const poolConfig = process.env.DATABASE_URL
         database: process.env.DB_NAME,
         user: process.env.DB_USER,
         password: process.env.DB_PASSWORD,
+        ssl: useSsl ? { rejectUnauthorized: false } : false,
     };
-if (useSsl) {
-    poolConfig.ssl = { rejectUnauthorized: false };
-}
 const pool = new Pool(poolConfig);
 export default pool;
